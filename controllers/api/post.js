@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Post, User } = require('../../models');
 const withAuth = require('../../utils/auth');
 
+//get all post
 router.get('/', (req, res) => {
     Post.findAll({
             attributes: [
@@ -12,18 +13,19 @@ router.get('/', (req, res) => {
             order: [
                 ['id', 'DESC']
             ],
-            // include: [{
-            //         model: User,
-            //         attributes: ['username']
-            //     }]
+            include: [{
+                    model: User,
+                    attributes: ['username']
+                }]
         })
-        .then(postData => res.json(postData.reverse()))
+        .then(postData => res.json(postData))
         .catch(err => {
             console.log(err);
             res.status(500).json(err);
         });
 
 });
+// get post by id
 router.get('/:id', (req, res) => {
     Post.findOne({
             where: {
@@ -37,7 +39,7 @@ router.get('/:id', (req, res) => {
             include: [{
                     model: User,
                     attributes: ['username']
-                }]
+                }],
         })
         .then(postData => {
             if (!postData) {
@@ -51,7 +53,7 @@ router.get('/:id', (req, res) => {
             res.status(500).json(err);
         });
 });
-
+//create post
 router.post('/', withAuth, (req, res) => {
     Post.create({
             title: req.body.title,
@@ -64,7 +66,7 @@ router.post('/', withAuth, (req, res) => {
             res.status(500).json(err);
         });
 });
-
+//update post
 router.put('/:id', withAuth, (req, res) => {
     Post.update({
             title: req.body.title,
@@ -85,6 +87,7 @@ router.put('/:id', withAuth, (req, res) => {
             res.status(500).json(err);
         });
 });
+//update post
 router.delete('/:id', withAuth, (req, res) => {
     Post.destroy({
         where: {

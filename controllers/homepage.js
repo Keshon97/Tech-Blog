@@ -1,4 +1,3 @@
-const sequelize = require('../config/connection');
 const { Post, User,} = require('../models');
 const router = require('express').Router();
 
@@ -36,7 +35,7 @@ router.get('/signup', (req, res) => {
     res.render('signup');
 });
 
-router.get('/post/:id', (req, res) => {
+router.get('/posts/:id', (req, res) => {
     Post.findOne({
         where: {
             id: req.params.id
@@ -58,7 +57,7 @@ router.get('/post/:id', (req, res) => {
             }
             const post = postData.get({ plain: true });
             console.log(post);
-            res.render('single-post', { post, loggedIn: req.session.loggedIn });
+            res.render('singlePost', { post, loggedIn: req.session.loggedIn });
 
 
         })
